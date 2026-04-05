@@ -1,0 +1,18 @@
+[
+  {
+    "Agent": "plan comparator",
+    "Cost ($)": 0.0006355,
+    "Prompt Tokens": 1672.0,
+    "Completion Tokens": 145.0,
+    "Total Tokens": 1817.0,
+    "Model": "gemini-3.1-flash-lite-preview"
+  },
+  {
+    "Agent": "Total",
+    "Cost ($)": 0.0006355,
+    "Prompt Tokens": 1672.0,
+    "Completion Tokens": 145.0,
+    "Total Tokens": 1817.0,
+    "Model": NaN
+  }
+]

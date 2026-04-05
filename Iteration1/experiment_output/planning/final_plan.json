@@ -1,0 +1,38 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load returns.csv and perform rolling-window GARCH(1,1) estimation (60-day window) to obtain conditional volatility forecasts.",
+                "Standardize returns by GARCH forecasts to obtain filtered innovations.",
+                "Perform a sanity check on the GARCH-filtered innovations (e.g., checking for remaining autocorrelation or heteroskedasticity) and report findings.",
+                "Implement the Orthogonalized Factor Model (PCA for Market Factor, Long-Short for Sector Factor) and compute factor loadings.",
+                "Construct the Factor-Based Covariance Matrix and the Ledoit-Wolf Shrinkage Covariance Matrix for each window.",
+                "Calculate the condition number for both matrices and save all intermediate covariance matrices and condition numbers to a structured .npz file for use in Step 2."
+            ],
+            "sub_task": "Data Preprocessing, GARCH-Filtering, and Covariance Estimation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Load the intermediate covariance matrices and condition numbers from Step 1.",
+                "Construct Minimum Variance Portfolios (MVP) using both the factor-based and shrinkage-based covariance matrices.",
+                "Calculate realized portfolio variance for the subsequent day t+1 and portfolio turnover for both strategies.",
+                "Compute the Information Ratio and the Explained Variance Ratio (R-squared) of the factor model.",
+                "Generate a summary plot comparing realized variance, condition numbers, and turnover over time.",
+                "Generate a diagnostic plot specifically visualizing the Explained Variance Ratio over time."
+            ],
+            "sub_task": "Portfolio Optimization and Performance Evaluation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Analyze the performance gap between factor-based and shrinkage-based covariance estimators.",
+                "Interpret the impact of GARCH-induced heteroskedasticity on the stability of the factor-based approach, referencing the sanity check results from Step 1.",
+                "Discuss the relationship between the Explained Variance Ratio, condition numbers, and portfolio turnover, explicitly referencing the diagnostic plots generated in Step 2.",
+                "Synthesize the findings into a final report, evaluating whether factor-based reconstruction effectively mitigates estimation error in the presence of high-volatility assets like TSLA."
+            ],
+            "sub_task": "Results Synthesis and Interpretation",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
