@@ -1,0 +1,40 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the returns.csv dataset and verify stationarity using the ADF test.",
+                "Implement a rolling-window GARCH(1,1) model to generate one-step-ahead conditional volatility forecasts for each asset.",
+                "Standardize returns by the GARCH-forecasted conditional standard deviations.",
+                "Perform a 60-day rolling-window PCA on the filtered returns to extract the first two principal components (market and sector factors).",
+                "Calculate factor loadings for each asset within each window.",
+                "Save the GARCH-filtered returns, extracted factor loadings, and components to intermediate_data.npz in the {database_path}."
+            ],
+            "sub_task": "Data Preprocessing, GARCH-filtering, and Factor Extraction",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Load intermediate_data.npz to construct the factor-based covariance matrix using the extracted loadings, factor covariance, and residual idiosyncratic variance.",
+                "Compute the Ledoit-Wolf shrinkage covariance matrix using the GARCH-forecasted volatilities as the target.",
+                "Construct Minimum Variance Portfolios (MVP) for both methods under long-only and unconstrained regimes.",
+                "Calculate realized portfolio variance for the subsequent day and portfolio stability metrics.",
+                "Perform Diebold-Mariano tests and print a summary table of test statistics (p-values and scores) to the console.",
+                "Generate summary plots comparing realized variances and a specific Idiosyncratic Volatility vs. Performance Gap scatter plot to identify efficacy thresholds."
+            ],
+            "sub_task": "Covariance Estimation and Portfolio Optimization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Synthesize the quantitative results and Diebold-Mariano statistics from the engineer's analysis.",
+                "Interpret the performance gap between factor-based and shrinkage-based covariance estimators.",
+                "Discuss the impact of GARCH-induced heteroskedasticity on latent factor recovery.",
+                "Evaluate the identified idiosyncratic volatility threshold where factor-based models lose efficacy.",
+                "Compare the Long-only vs. Unconstrained portfolio results to discuss how constraints interact with covariance estimation.",
+                "Write the final Results section of the research report, referencing all generated statistics and plots."
+            ],
+            "sub_task": "Results Interpretation and Final Report",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
