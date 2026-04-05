@@ -1,0 +1,44 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{graphicx} 
+
+
+\begin{document}
+
+The out-of-sample performance and diagnostic properties of the Minimum Variance Portfolios constructed using the structural two-factor model and the Ledoit-Wolf shrinkage estimator are presented below. Our analysis focuses on realized portfolio variance, the numerical stability of the estimated covariance matrices, and the underlying explanatory power of the factor model.
+
+\subsection{Portfolio performance and numerical stability}
+The primary evaluation of the two covariance estimation strategies is based on the out-of-sample realized variance of the resulting Minimum Variance Portfolios. Figure \ref{fig:summary_plot} provides a comprehensive comparison of the key performance and diagnostic metrics over the entire backtesting period.
+
+The shrinkage-based estimator consistently outperforms the structural factor model in terms of risk reduction. The top panel of Figure \ref{fig:summary_plot} illustrates the daily realized portfolio variance for both strategies. The portfolio derived from the shrinkage estimator exhibits not only a lower average variance but also less frequent and less extreme spikes in volatility compared to the factor-based portfolio. Quantitatively, the mean realized variance for the shrinkage strategy was approximately 0.000126, whereas the factor-based strategy yielded a significantly higher mean variance of 0.000153.
+
+A critical diagnostic for understanding this performance disparity is the numerical stability of the estimated covariance matrices, measured by their condition number. The middle panel of Figure \ref{fig:summary_plot} reveals a dramatic difference between the two methods. The covariance matrix from the shrinkage estimator remains well-conditioned throughout the simulation, with a mean condition number of approximately 20.8. In stark contrast, the factor-based covariance matrix is severely ill-conditioned, with a mean condition number of approximately 88,480 and frequent, extreme spikes. This high condition number indicates that the matrix is nearly singular, making its inversion—a necessary step for calculating portfolio weights—highly sensitive to small estimation errors.
+
+This instability directly impacts portfolio construction, often leading to volatile and extreme asset allocations. The bottom panel of Figure \ref{fig:summary_plot} shows the daily portfolio turnover. While both strategies exhibit comparable mean turnover (0.197 for the factor model versus 0.214 for the shrinkage model), the interpretation is different. For the shrinkage model, the rebalancing leads to lower realized risk. For the factor model, the high turnover does not translate into improved performance, suggesting that the portfolio adjustments are largely driven by noise propagated from the unstable covariance estimate rather than a true signal of changing risk dynamics.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{../input_files/plots/step_2_summary_plot_1775415610.png}
+    \caption{Comparison of the factor-based and shrinkage covariance estimators across realized portfolio variance (top), covariance matrix condition number (middle), and portfolio turnover (bottom). The factor-based approach exhibits significant numerical instability, evidenced by a high and volatile condition number, which translates into higher realized portfolio variance compared to the robust shrinkage estimator. Despite this performance gap, both methods result in comparable levels of portfolio turnover, suggesting the rebalancing in the factor-based strategy is driven by estimation noise rather than signal.}
+    \label{fig:summary_plot}
+\end{figure*}
+
+\subsection{Diagnosing the source of factor model instability}
+To investigate the cause of the factor model's poor performance, we first assess whether the chosen factors adequately capture the systematic risk in the asset universe. The explanatory power of the two-factor model, as measured by the R-squared from the OLS regressions, is shown in Figure \ref{fig:r_squared_plot}.
+
+The explained variance ratio remains relatively stable over the 1,000-day period, fluctuating mostly between 0.4 and 0.6. The absence of a systematic decline or extreme volatility in the R-squared suggests that the two-factor structure provides a reasonably consistent explanation of the systematic components of asset returns. Therefore, the failure of the factor-based covariance estimator is unlikely to be caused by a fundamental lack of model span or an inability of the factors to capture common sources of risk.
+
+Instead, the evidence points toward the estimation of the idiosyncratic variance matrix, $\Psi_t$, as the primary source of instability. As detailed in the Methods section, the final covariance matrix is reconstructed by scaling the estimated covariance of innovations with the GARCH-forecasted volatilities. Any estimation error in the diagonal elements of $\Psi_t$, which are derived from regression residuals over a short 60-day window, is amplified by the squared GARCH volatility forecasts ($\hat{\sigma}_{i,t}^2$). For assets with high and time-varying idiosyncratic risk, this process introduces significant noise into the final covariance matrix, leading to the extremely high condition numbers observed in Figure \ref{fig:summary_plot}. The structural model, while theoretically sound, proves to be fragile in practice because it overfits to the noisy idiosyncratic component of returns, a problem that the regularization inherent in the shrinkage estimator is specifically designed to mitigate.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\columnwidth]{../input_files/plots/step_2_r_squared_plot_1775415610.png}
+    \caption{Explained Variance Ratio (R-squared) of the two-factor model over the 1,000-day simulation period. The relative stability of the R-squared indicates that the model span is sufficient to capture systematic returns, suggesting that the underperformance of the factor-based covariance estimator is not driven by a failure to explain systematic risk.}
+    \label{fig:r_squared_plot}
+\end{figure}
+
+\end{document}
+                

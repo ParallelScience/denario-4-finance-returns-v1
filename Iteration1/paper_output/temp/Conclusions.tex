@@ -1,0 +1,18 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{graphicx} 
+
+
+\begin{document}
+
+This paper addressed the challenge of estimating the covariance matrix of asset returns for Minimum Variance Portfolio optimization, particularly in an environment characterized by time-varying volatility and significant idiosyncratic risk. We conducted a direct empirical comparison of two dynamic estimation strategies: a structural two-factor model designed to isolate systematic risk, and a Ledoit-Wolf shrinkage estimator that regularizes the sample covariance matrix. The analysis was performed on a 1,000-day panel of ten large-cap equities, with both methods applied within a 60-day rolling window to returns that were first filtered through asset-specific GARCH(1,1) models to account for heteroskedasticity.
+
+Our results demonstrated that the shrinkage-based approach consistently constructed portfolios with lower out-of-sample realized variance compared to the factor-based model. A diagnostic analysis of the estimated covariance matrices revealed the source of this performance gap. The factor-based covariance matrix was found to be severely ill-conditioned, exhibiting an extremely high and volatile condition number. In contrast, the shrinkage estimator produced a well-conditioned and numerically stable matrix throughout the backtest. This instability in the factor model indicates that its inverse, and therefore the resulting portfolio weights, were highly sensitive to small estimation errors.
+
+We learned that the failure of the factor model was not caused by a lack of explanatory power, as the model's R-squared was reasonably stable, suggesting the factors adequately captured systematic risk. The primary source of instability was the estimation of the idiosyncratic variance components. Estimation errors in the idiosyncratic variances, derived from regression residuals over a short window, were significantly amplified when re-scaled by the GARCH volatility forecasts. This process of overfitting to noisy, asset-specific risk components compromised the stability of the entire covariance matrix. In conclusion, this study shows that while structural models provide an intuitive framework for risk, they can be fragile to the propagation of estimation error. In a dynamic and heteroskedastic environment, the statistical regularization provided by the shrinkage estimator proved to be a more robust and effective method for producing reliable covariance estimates for portfolio optimization.
+
+\end{document}
+                

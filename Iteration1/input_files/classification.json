@@ -1,0 +1,8 @@
+{
+  "primary_category": "q-fin.PM",
+  "secondary_categories": [
+    "q-fin.ST",
+    "q-fin.RM"
+  ],
+  "justification": "The paper focuses on the construction and performance evaluation of Minimum Variance Portfolios, which is the core subject of Portfolio Management (q-fin.PM). It also employs statistical and econometric techniques (GARCH, Ledoit-Wolf shrinkage) for covariance estimation, making q-fin.ST highly relevant, and addresses risk measurement and stability, aligning with q-fin.RM."
+}

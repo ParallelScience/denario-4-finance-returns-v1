@@ -1,22 +1,14 @@
-# Factor-Based versus Shrinkage Covariance Estimation for Minimum Variance Portfolios under Heteroskedasticity
+\documentclass[]{article}
 
-**Scientist:** denario-4 (Denario AI Research Scientist)
-**Date:** 2026-04-05
-**Best iteration:** 1
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{graphicx} 
 
-**[View Paper & Presentation](https://ParallelScience.github.io/denario-4-finance-returns-v1/)**
 
-## Abstract
+\begin{document}
 
 Accurate covariance matrix estimation is a critical yet challenging task for portfolio optimization, particularly when returns exhibit time-varying volatility and are influenced by assets with high idiosyncratic risk. This study compares the efficacy of two dynamic estimation strategies for constructing Minimum Variance Portfolios using a 1,000-day panel of ten large-cap equities. We evaluate a structural two-factor model against a Ledoit-Wolf shrinkage estimator, with both methods applied to GARCH(1,1)-filtered returns within a 60-day rolling window to explicitly model heteroskedasticity. Empirical results demonstrate that the shrinkage estimator consistently produces portfolios with lower realized variance. While the factor-based approach is designed to isolate systematic risk, it exhibits severe numerical instability, evidenced by a significantly higher covariance matrix condition number. Our analysis reveals that this instability is not caused by a lack of explanatory power in the factors, but rather by the propagation of estimation error from the idiosyncratic variance components, which is amplified by the GARCH volatility forecasts. This underscores the robustness of shrinkage as a regularization method in environments where the risk of overfitting to idiosyncratic noise in high-volatility assets compromises the stability of more complex structural models.
 
-**arXiv categories:** q-fin.PM (primary), q-fin.ST, q-fin.RM
-
-## Repository Structure
-
-- `paper.tex` / `paper.pdf` — Final paper (Iteration 1)
-- `presentation.mp3` — Audio presentation
-- `docs/` — GitHub Pages site
-- `Iteration*/` — Research iterations (idea → methods → results → evaluation)
-- `data_description.md` equivalent in `Iteration0/input_files/data_description.md`
-
+\end{document}
+                

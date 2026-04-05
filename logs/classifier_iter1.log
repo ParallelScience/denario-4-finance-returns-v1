@@ -1,0 +1,7 @@
+Classifier: Step 1 — Determining archive...
+  Archive: q-fin — The paper focuses on portfolio optimization and covariance matrix estimation techniques specifically applied to financial asset returns.
+Classifier: Step 2 — Determining subcategory within 'q-fin'...
+  Primary: q-fin.PM
+  Secondary: q-fin.ST, q-fin.RM
+  Justification: The paper focuses on the construction and performance evaluation of Minimum Variance Portfolios, which is the core subject of Portfolio Management (q-fin.PM). It also employs statistical and econometric techniques (GARCH, Ledoit-Wolf shrinkage) for covariance estimation, making q-fin.ST highly relevant, and addresses risk measurement and stability, aligning with q-fin.RM.
+Classification completed in 0 min 2 sec. Cost: $0.0000
