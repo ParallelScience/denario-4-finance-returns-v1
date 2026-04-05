@@ -1,0 +1,115 @@
+
+###### PROMPT BEGINS ########
+Human: 
+**Role**: Senior Scientific Lead and Peer Reviewer.
+**Objective**: Critically evaluate 10 proposed research ideas and select the single most impactful project to move into the planning phase.
+
+**Evaluation Framework**:
+To determine the "largest scientific impact," you must weigh each idea against the following four pillars:
+1. **Feasibility**: Given the constraints in the 'Data Description,' can this project actually be executed with the available variables?
+2. **Novelty**: Does the idea offer a fresh perspective, or is it a standard, derivative analysis?
+3. **Rigour**: Does the idea suggest a deep investigation into the underlying physics/logic of the data?
+4. **Utility**: Will the results provide actionable insights or significantly enhance our understanding of the system?
+5. The idea selected should be as different as possible to any previous ideas.
+
+**Task**:
+1. Review the proposed 10 research ideas along with any previous ideas.
+2. Review the 'Data Description' to ensure the ideas are physically and statistically grounded.
+3. Select the **one** idea that best balances innovation with scientific feasibility.
+4. The selected idea must contain a title and a description of it.
+
+**Operational Constraints**:
+- Do not provide a list of pros and cons.
+- Do not modify the original text of the idea.
+- Provide **only** the text of the selected idea within the required tags.
+
+Data description:
+## Dataset: Synthetic Equity Returns Panel
+
+### Overview
+A synthetic daily returns panel for 10 large-cap US equities, generated from a two-factor linear model with GARCH volatility clustering, covering 1,000 trading days (2020-01-02 to 2023-11-01).
+
+### Assets
+AAPL, MSFT, GOOGL, AMZN, META (technology sector), TSLA (high-beta growth), JPM, GS (financials), XOM (energy), JNJ (healthcare/defensive).
+
+### Data Files
+- `returns.csv` — daily log-returns, shape (1000, 10), columns = ticker names, index = date (business days)
+- `prices.csv` — price series (base 100), shape (1000, 10)
+- `returns.npy` — NumPy structured array with named fields per ticker
+
+### Data Generating Process
+1. **Two-factor model**: each asset's return = β_market × market_factor + β_sector × sector_factor + ε_idiosyncratic
+   - Market factor: N(0.0003, 0.012) daily — ~7.5% annualised return, 19% vol
+   - Sector factor: N(0.0001, 0.008) — separates tech/growth from financials/energy
+2. **Volatility clustering (GARCH(1,1))**: TSLA return series has time-varying volatility (α=0.10, β=0.85, ω=1e-5)
+3. **Idiosyncratic shocks**: asset-specific Gaussian noise with volatilities ranging from 1.0% (JNJ) to 3.0% (TSLA)
+
+### Key Statistics (annualised)
+| Ticker | Return | Volatility | Sharpe |
+|--------|--------|-----------|--------|
+| AAPL   | 31.7%  | 33.9%     | 0.94   |
+| MSFT   | 22.1%  | 30.3%     | 0.73   |
+| GOOGL  |  9.5%  | 29.8%     | 0.32   |
+| AMZN   | 12.0%  | 36.5%     | 0.33   |
+| META   | 19.4%  | 39.6%     | 0.49   |
+| TSLA   | 52.8%  | 67.0%     | 0.79   |
+| JPM    | 12.6%  | 25.7%     | 0.49   |
+| GS     |  6.1%  | 27.7%     | 0.22   |
+| XOM    |-11.8%  | 22.8%     |-0.52   |
+| JNJ    | -3.2%  | 20.8%     |-0.15   |
+
+### Cross-sectional structure
+- Tech stocks are highly correlated (pairwise ρ ≈ 0.45–0.55)
+- Tech vs financials/energy have lower or negative correlations via the sector factor
+- True market β ranges from 0.6 (JNJ) to 1.8 (TSLA)
+
+### Suggested Research Directions
+- Factor model estimation and latent factor recovery
+- Portfolio optimisation (mean-variance, minimum variance, maximum Sharpe)
+- Volatility modelling and forecasting (GARCH on individual series)
+- Risk decomposition: systematic vs idiosyncratic risk
+- Covariance matrix estimation (shrinkage, factor-based)
+- Cross-sectional return predictability from betas
+
+
+Proposed ideas:
+1. **Asymmetric Volatility Transmission**: Does the GARCH-driven volatility of high-beta assets like TSLA act as a lead indicator for idiosyncratic risk spikes in defensive sectors like JNJ? This investigates if localized volatility clusters propagate across the market topology or remain isolated within sector-specific regimes.
+
+2. **Sector Factor Decoupling**: To what extent has the correlation between the "Tech" sector factor and the "Market" factor drifted over the 1,000-day window? This examines if structural shifts in factor loadings occur even in a stationary synthetic environment, challenging the assumption of constant beta.
+
+3. **Tail-Risk Contagion Dynamics**: Do idiosyncratic shocks in high-volatility assets provide predictive information regarding the subsequent market-wide drawdown intensity? This explores whether extreme residuals in growth stocks serve as a precursor to broader market instability.
+
+4. **Information Efficiency of Defensive Assets**: Does the low-beta nature of JNJ and XOM result in a delayed response to the latent market factor compared to tech equities? This research question addresses whether lead-lag relationships exist across the cross-section due to differing factor sensitivities.
+
+5. **Idiosyncratic Noise Entropy**: Can the entropy of idiosyncratic returns be used to identify regime shifts in the latent factor process? This tests whether the "noise" component contains non-random structural information that reveals changes in the underlying factor generation process.
+
+6. **Factor Loading Stability under Volatility Regimes**: How does the stability of sector-specific beta estimates fluctuate during high-volatility periods defined by the GARCH process? This assesses whether factor models become misspecified when volatility exceeds historical thresholds.
+
+7. **Cross-Asset Volatility Spillover Topology**: Can a directed network be constructed to map the flow of volatility between the ten assets, and does this network topology reorganize during market downturns? This seeks to understand if the hierarchy of influence between assets is dynamic or fixed.
+
+8. **Beta-Adjusted Sharpe Ratio Decay**: Does the empirical Sharpe ratio of high-beta assets converge toward the market average as the investment horizon expands? This investigates the sustainability of risk-adjusted returns when accounting for time-varying idiosyncratic volatility.
+
+9. **Decomposition of Risk-Premium Mispricing**: Is the unexplained portion of the return (the idiosyncratic component) correlated with the realized volatility of the sector factor? This evaluates if the two-factor model fails to capture interaction effects between sector-specific shocks and overall market sentiment.
+
+10. **Signal-to-Noise Ratio in Latent Factors**: Can the latent market factor be recovered more accurately by filtering out assets with high idiosyncratic volatility? This explores the potential for "cleaner" factor estimation by dynamically weighting assets based on their idiosyncratic-to-systematic risk ratio.
+
+
+
+
+
+
+
+Respond in exactly the following format:
+
+\\begin{IDEA}
+<IDEA>
+\\end{IDEA}
+
+In <IDEA>, put the idea you have selected
+
+###### PROMPT ENDS ########
+
+\begin{IDEA}
+7. **Cross-Asset Volatility Spillover Topology**: Can a directed network be constructed to map the flow of volatility between the ten assets, and does this network topology reorganize during market downturns? This seeks to understand if the hierarchy of influence between assets is dynamic or fixed.
+\end{IDEA}
+
