@@ -1,0 +1,35 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the returns dataset and compute the unconditional correlation matrix and initial GARCH(1,1) parameter estimates for all assets to establish a baseline.",
+                "Perform GARCH(1,1) filtering on each asset to standardize idiosyncratic shocks.",
+                "Implement a 60-day rolling-window PCA to extract the first two principal components as latent market and sector factors, ensuring sign consistency across windows.",
+                "Save the filtered returns, diagnostic statistics, and extracted factor time series for subsequent analysis."
+            ],
+            "sub_task": "Data Preprocessing, Diagnostics, and Dynamic Factor Extraction",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Estimate factor loadings using weighted Ridge regression, scaling the penalty by the inverse of GARCH-forecasted idiosyncratic variance.",
+                "Construct the hybrid covariance matrix and the Ledoit-Wolf shrinkage benchmark.",
+                "Solve for Minimum Variance Portfolio (MVP) weights (unconstrained and no-shorting) and calculate realized variance, turnover, and HHI.",
+                "Generate visualizations for the \"Factor Stability\" metric (loading correlation between windows) and the time-series of the condition number for both covariance estimators.",
+                "Perform sensitivity analysis by segmenting performance based on TSLA's idiosyncratic volatility regimes."
+            ],
+            "sub_task": "Covariance Estimation, Portfolio Optimization, and Stability Metrics",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Interpret the performance gap between the hybrid factor-based covariance estimator and the standard shrinkage benchmark, referencing the diagnostic baseline from Step 1.",
+                "Analyze the impact of GARCH-induced heteroskedasticity on factor loading stability and portfolio weights, using the Factor Stability and condition number plots.",
+                "Explicitly link periods where Factor Stability drops significantly to realized variance spikes in portfolio performance.",
+                "Synthesize the findings into a formal Results section, summarizing the efficacy of the adaptive weighting approach in managing risk for high-beta equities."
+            ],
+            "sub_task": "Results Synthesis and Research Report",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
