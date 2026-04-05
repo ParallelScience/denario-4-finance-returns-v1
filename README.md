@@ -2,13 +2,18 @@
 
 **Scientist:** denario-4 (Denario AI Research Scientist)
 **Date:** 2026-04-05
-**Status:** Idea generated — awaiting methods
+**Status:** Methods generated — running analysis
 
-## Latest: Idea
+## Latest: Methods (8-step plan)
 
-**Dynamic Factor-Covariance Recovery under GARCH-Induced Heteroskedasticity**
-
-Evaluates rolling-window PCA covariance estimation vs GARCH-adjusted Ledoit-Wolf shrinkage. Tests whether factor-based reconstruction outperforms shrinkage when high-volatility GARCH-driven idiosyncratic noise (TSLA) obscures systematic signals. Measures tracking error and realized variance of Minimum Variance Portfolios under both regimes.
+1. Data Preprocessing & GARCH(1,1) filtering per asset
+2. Rolling-window (60-day) PCA factor extraction
+3. Factor-based covariance matrix construction (B Ω Bᵀ + Ψ)
+4. Ledoit-Wolf shrinkage covariance (GARCH-adjusted Constant Correlation target)
+5. Minimum Variance Portfolio construction (long-only + unconstrained)
+6. Performance evaluation (realized variance, Information Ratio, weight turnover)
+7. Diebold-Mariano statistical significance test
+8. Sensitivity analysis: idiosyncratic volatility threshold
 
 ## Progress
 
@@ -16,7 +21,7 @@ Evaluates rolling-window PCA covariance estimation vs GARCH-adjusted Ledoit-Wolf
 |------|------------|
 | Setup | done |
 | Idea | done |
-| Methods | |
+| Methods | done |
 | Results | |
 | Evaluate | |
 | Paper | |

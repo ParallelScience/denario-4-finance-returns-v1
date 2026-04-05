@@ -1,0 +1,136 @@
+
+###### PROMPT BEGINS ########
+Human: You are provided with:
+- a description of the data
+- an idea
+- research plan to carry out the idea.
+
+Your task is to provide suggestions on how to improve the plan.
+Take into account and potential feedback (if any).
+If the plan is already good enough, do not give suggestions to improve it. If this is not first iteration, you will also be provided with the previous research plan along with some feedback on it. If this is the case, take into account the feedback provided when designing the new research plan. It is good to have a detailed plan, but not to have an overly complicated plan. If you dont have suggestions, just say that you dont have further suggestions. The idea should remain the same. No need to add code to the research plan, as another agent will write code given the research plan.
+
+Data description:
+## Dataset: Synthetic Equity Returns Panel
+
+### Overview
+A synthetic daily returns panel for 10 large-cap US equities, generated from a two-factor linear model with GARCH volatility clustering, covering 1,000 trading days (2020-01-02 to 2023-11-01).
+
+### Assets
+AAPL, MSFT, GOOGL, AMZN, META (technology sector), TSLA (high-beta growth), JPM, GS (financials), XOM (energy), JNJ (healthcare/defensive).
+
+### Data Files
+- `returns.csv` — daily log-returns, shape (1000, 10), columns = ticker names, index = date (business days)
+- `prices.csv` — price series (base 100), shape (1000, 10)
+- `returns.npy` — NumPy structured array with named fields per ticker
+
+### Data Generating Process
+1. **Two-factor model**: each asset's return = β_market × market_factor + β_sector × sector_factor + ε_idiosyncratic
+   - Market factor: N(0.0003, 0.012) daily — ~7.5% annualised return, 19% vol
+   - Sector factor: N(0.0001, 0.008) — separates tech/growth from financials/energy
+2. **Volatility clustering (GARCH(1,1))**: TSLA return series has time-varying volatility (α=0.10, β=0.85, ω=1e-5)
+3. **Idiosyncratic shocks**: asset-specific Gaussian noise with volatilities ranging from 1.0% (JNJ) to 3.0% (TSLA)
+
+### Key Statistics (annualised)
+| Ticker | Return | Volatility | Sharpe |
+|--------|--------|-----------|--------|
+| AAPL   | 31.7%  | 33.9%     | 0.94   |
+| MSFT   | 22.1%  | 30.3%     | 0.73   |
+| GOOGL  |  9.5%  | 29.8%     | 0.32   |
+| AMZN   | 12.0%  | 36.5%     | 0.33   |
+| META   | 19.4%  | 39.6%     | 0.49   |
+| TSLA   | 52.8%  | 67.0%     | 0.79   |
+| JPM    | 12.6%  | 25.7%     | 0.49   |
+| GS     |  6.1%  | 27.7%     | 0.22   |
+| XOM    |-11.8%  | 22.8%     |-0.52   |
+| JNJ    | -3.2%  | 20.8%     |-0.15   |
+
+### Cross-sectional structure
+- Tech stocks are highly correlated (pairwise ρ ≈ 0.45–0.55)
+- Tech vs financials/energy have lower or negative correlations via the sector factor
+- True market β ranges from 0.6 (JNJ) to 1.8 (TSLA)
+
+### Suggested Research Directions
+- Factor model estimation and latent factor recovery
+- Portfolio optimisation (mean-variance, minimum variance, maximum Sharpe)
+- Volatility modelling and forecasting (GARCH on individual series)
+- Risk decomposition: systematic vs idiosyncratic risk
+- Covariance matrix estimation (shrinkage, factor-based)
+- Cross-sectional return predictability from betas
+
+
+Idea:
+Title: Dynamic Factor-Covariance Recovery under GARCH-Induced Heteroskedasticity
+
+This research evaluates the efficacy of a rolling-window PCA-based covariance estimator against a GARCH-adjusted Ledoit-Wolf shrinkage target within the provided 1,000-day panel. By employing a 60-day rolling window, we extract latent market and sector factors to reconstruct the covariance matrix, specifically testing whether this factor-based approach outperforms shrinkage when the high-volatility, GARCH-driven idiosyncratic noise of TSLA obscures systematic signals. We quantify the performance gap by measuring the tracking error and realized variance of Minimum Variance Portfolios (MVP) constructed under both regimes. The study identifies the precise threshold of idiosyncratic volatility where factor-based reconstruction fails due to estimation error in the latent factor loadings. By integrating GARCH(1,1) conditional variance forecasts into the shrinkage target, we demonstrate how adaptive weighting of asset-specific shocks mitigates the instability inherent in standard covariance estimation for high-beta equities.
+
+Research plan:
+1. **Data Preprocessing and Stationarity Verification**:
+   - Load the `returns.csv` dataset and ensure the index is set to datetime objects.
+   - Perform an Augmented Dickey-Fuller (ADF) test on each asset return series to confirm stationarity.
+   - Standardize the returns by subtracting the mean and dividing by the rolling 60-day standard deviation to prepare for factor extraction.
+
+2. **GARCH(1,1) Parameter Estimation**:
+   - For each of the 10 assets, fit a GARCH(1,1) model to the returns to estimate the conditional variance parameters ($\omega, \alpha, \beta$).
+   - Generate one-step-ahead conditional volatility forecasts for the entire 1,000-day period.
+   - Use these forecasts to create a diagonal matrix of conditional variances, $D_t$, for each time step $t$, which will be used to rescale the returns for the covariance estimation steps.
+
+3. **Rolling-Window Factor Extraction**:
+   - Implement a 60-day rolling window approach across the 1,000-day panel.
+   - Within each window, perform Principal Component Analysis (PCA) on the returns to extract the first two principal components, representing the latent market and sector factors.
+   - Calculate the factor loadings ($\beta_{market}, \beta_{sector}$) for each asset by regressing the asset returns onto the extracted components.
+
+4. **Covariance Matrix Estimation (Factor-Based)**:
+   - Construct the factor-based covariance matrix $\Sigma_{factor, t} = B_t \Omega_t B_t^T + \Psi_t$, where $B_t$ is the matrix of loadings, $\Omega_t$ is the factor covariance matrix, and $\Psi_t$ is the diagonal matrix of idiosyncratic variances.
+   - Estimate $\Psi_t$ using the residuals from the factor model, ensuring the diagonal elements are adjusted by the GARCH-forecasted conditional variances.
+
+5. **Covariance Matrix Estimation (Shrinkage-Based)**:
+   - Compute the sample covariance matrix $S_t$ for each 60-day window.
+   - Apply the Ledoit-Wolf shrinkage estimator to $S_t$ using the identity matrix as the shrinkage target.
+   - Create a second version of the shrinkage estimator where the target is adjusted by the GARCH-forecasted conditional variances to account for heteroskedasticity.
+
+6. **Minimum Variance Portfolio (MVP) Construction**:
+   - For each time step $t$ (starting from day 61), calculate the optimal weights for the MVP using both the factor-based covariance matrix and the GARCH-adjusted shrinkage matrix.
+   - Impose a long-only constraint (weights $\ge 0$) and a full investment constraint (sum of weights = 1) for both portfolios.
+   - Calculate the realized portfolio variance for the subsequent day $t+1$ for both strategies.
+
+7. **Performance Evaluation and Tracking Error Analysis**:
+   - Compute the daily tracking error between the two portfolio strategies.
+   - Calculate the realized variance and the Sharpe ratio for both portfolios over the total period.
+   - Perform a Diebold-Mariano test to determine if the difference in realized variance between the factor-based and shrinkage-based portfolios is statistically significant.
+
+8. **Sensitivity Analysis on Idiosyncratic Volatility**:
+   - Segment the time periods based on the realized idiosyncratic volatility of TSLA (the high-beta asset).
+   - Plot the performance gap (difference in realized variance) against the level of TSLA's idiosyncratic volatility.
+   - Identify the threshold of idiosyncratic volatility where the factor-based covariance reconstruction begins to underperform the shrinkage-based approach, using a rolling-window regression of the performance gap on the idiosyncratic variance.
+
+Previous research plan:
+None
+
+Feedback on previous research plan:
+None
+
+
+Respond in this format:
+
+\\begin{SUGGESTIONS}
+<SUGGESTIONS>
+\\end{SUGGESTIONS}
+
+In <SUGGESTIONS> put the suggestions to improve the plan.
+
+###### PROMPT ENDS ########
+
+\begin{SUGGESTIONS}
+The research plan is well-structured and logically sound. To further strengthen the robustness and clarity of the analysis, I suggest the following refinements:
+
+1. **Refine the Factor-Based Covariance Construction (Step 4):** In the formula $\Sigma_{factor, t} = B_t \Omega_t B_t^T + \Psi_t$, ensure that $\Psi_t$ is explicitly defined as a diagonal matrix of the *residual* variances from the factor model. Since you are using GARCH-forecasted variances, consider whether you want to use the GARCH forecast as the *entire* idiosyncratic variance or as a scaling factor for the residual variance. I recommend using the GARCH forecast to scale the residual variance to ensure the total variance matches the conditional volatility observed in the data.
+
+2. **Clarify the Shrinkage Target (Step 5):** Standard Ledoit-Wolf shrinkage typically uses a constant correlation target (the "constant correlation" model) rather than the identity matrix, as the identity matrix assumes zero correlation, which is unrealistic for equity returns. Given your goal is to compare against a factor-based model, using the constant correlation target will provide a more competitive and realistic benchmark.
+
+3. **Portfolio Constraints (Step 6):** While long-only constraints are standard, they can sometimes mask the performance of the covariance estimator itself by forcing weights away from the "true" minimum variance solution (which often involves short selling). Consider also calculating the "unconstrained" MVP (allowing short positions) as a secondary check to see if the covariance estimation differences are more pronounced without the long-only bias.
+
+4. **Evaluation Metric (Step 7):** In addition to the Diebold-Mariano test, consider calculating the "Global Minimum Variance Portfolio" (GMVP) weights' stability over time (e.g., the sum of absolute changes in weights, $\sum |w_t - w_{t-1}|$). This will help determine if one method produces significantly more "noisy" or unstable portfolios, which is a critical practical consideration in finance.
+
+5. **Data Leakage Check:** Ensure that the GARCH parameters in Step 2 are estimated using only data available up to time $t$ (expanding or rolling window) rather than the full 1,000-day sample, to avoid look-ahead bias.
+\end{SUGGESTIONS}
+
